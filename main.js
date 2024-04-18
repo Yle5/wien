@@ -24,6 +24,7 @@ L.control
     "BasemapAT Oberfläche": L.tileLayer.provider("BasemapAT.surface"),
     "BasemapAT Orthofoto": L.tileLayer.provider("BasemapAT.orthofoto"),
     "BasemapAT Beschriftung": L.tileLayer.provider("BasemapAT.overlay"),
+    "Esri World Street Map": L.tileLayer.provider("Esri.WorldStreetMap"),
   })
   .addTo(map);
 
