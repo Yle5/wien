@@ -89,7 +89,9 @@ async function loadLines(url) {
       console.log(feature.properties.LINE_NAME);
       layer.bindPopup(`
       <h4><i class="fa-solid fa-bus"></i> ${feature.properties.LINE_NAME}</h4> 
-      <adress>${feature.properties.TO_NAME}</adress>
+      <i class="fa-regular fa-circle-stop"></i><adress>${feature.properties.FROM_NAME}</adress>
+      <br> <i class="fa-solid fa-arrow-down"></i>
+      <br><i class="fa-regular fa-circle-stop"></i><adress>${feature.properties.TO_NAME}</adress>
       `)
     }
   }).addTo(themaLayer.lines);
@@ -105,11 +107,10 @@ async function loadStops(url) {
   L.geoJSON(geojson, {
     onEachFeature: function (feature, layer) {
       console.log(feature);
-      console.log(feature.properties.NAME);
+      console.log(feature.properties.STAT_NAME);
       layer.bindPopup(`
-      <img src="${feature.properties.THUMBNAIL}" alt"*">
-      <h4><a href="${feature.properties.WEITERE_INF}" target="wien">${feature.properties.NAME}</a></h4>
-      <adress>${feature.properties.ADRESSE}</adress>      
+      <h4><i class="fa-solid fa-bus"></i> ${feature.properties.LINE_NAME}</h4>
+      <adress>${feature.properties.STAT_NAME}</adress>      
       `)
     }
   }).addTo(themaLayer.stops);
@@ -127,9 +128,10 @@ async function loadFußgängerzonen(url) {
       console.log(feature);
       console.log(feature.properties.NAME);
       layer.bindPopup(`
-      <img src="${feature.properties.THUMBNAIL}" alt"*">
-      <h4><a href="${feature.properties.WEITERE_INF}" target="wien">${feature.properties.NAME}</a></h4>
-      <adress>${feature.properties.ADRESSE}</adress>      
+      <h4><adress>${feature.properties.ADRESSE}</adress></h4> 
+      <i class="fa-regular fa-clock"></i><time> ${feature.properties.ZEITRAUM}</time>
+      <br>
+      <i class="fa-solid fa-circle-info"></i><exception> ${feature.properties.AUSN_TEXT}</exception>   
       `)
     }
   }).addTo(themaLayer.Fußgängerzonen);
@@ -147,9 +149,18 @@ async function loadHotels(url) {
       console.log(feature);
       console.log(feature.properties.NAME);
       layer.bindPopup(`
-      <img src="${feature.properties.THUMBNAIL}" alt"*">
-      <h4><a href="${feature.properties.WEITERE_INF}" target="wien">${feature.properties.NAME}</a></h4>
-      <adress>${feature.properties.ADRESSE}</adress>      
+      <h4>${feature.properties.BETRIEB}</h4>
+      <h5><hotel>Hotel ${feature.properties.KATEGORIE_TXT}</h5></hotel>
+      <hr>
+      <adress>Addr.: ${feature.properties.ADRESSE}</adress>
+      <br>  
+      <phone>Tel.: ${feature.properties.KONTAKT_TEL}</phone>
+      <br>
+      <email>${feature.properties.KONTAKT_EMAIL}</email>
+      <br>
+      <website>${feature.properties.WEBLINK1}</website>
+    
+
       `)
     }
   }).addTo(themaLayer.hotels);
