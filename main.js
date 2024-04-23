@@ -86,11 +86,10 @@ async function loadLines(url) {
   L.geoJSON(geojson, {
     onEachFeature: function (feature, layer) {
       console.log(feature);
-      console.log(feature.properties.NAME);
+      console.log(feature.properties.LINE_NAME);
       layer.bindPopup(`
-      <img src="${feature.properties.THUMBNAIL}" alt"*">
-      <h4><a href="${feature.properties.WEITERE_INF}" target="wien">${feature.properties.NAME}</a></h4>
-      <adress>${feature.properties.ADRESSE}</adress>      
+      <h4><i class="fa-solid fa-bus"></i> ${feature.properties.LINE_NAME}</h4> 
+      <adress>${feature.properties.TO_NAME}</adress>
       `)
     }
   }).addTo(themaLayer.lines);
