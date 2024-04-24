@@ -154,9 +154,9 @@ async function loadHotels(url) {
       <hr>
       <adress>Addr.: ${feature.properties.ADRESSE}</adress>
       <br>  
-      <phone>Tel.: ${feature.properties.KONTAKT_TEL}</phone>
+      <phone>Tel.: <a href="${feature.properties.KONTAKT_TEL}">${feature.properties.KONTAKT_TEL}</a></phone>
       <br>
-      <email><a href="${feature.properties.KONTAKT_EMAIL}">any</a></email>
+      <email><a href="${feature.properties.KONTAKT_EMAIL}">${feature.properties.KONTAKT_EMAIL}</a></email>
       <br>
       <website><a href="${feature.properties.WEBLINK1}">Homepage</a></website>
     
