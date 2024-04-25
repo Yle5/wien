@@ -15,10 +15,10 @@ let startLayer = L.tileLayer.provider("BasemapAT.grau");
 startLayer.addTo(map);
 
 let themaLayer = {
-  sights: L.featureGroup(),
+  sights: L.featureGroup().addTo(map),
   lines: L.featureGroup(),
   stops: L.featureGroup(),
-  zones: L.featureGroup().addTo(map),
+  zones: L.featureGroup(),
   hotels: L.featureGroup(),
 }
 
@@ -63,8 +63,18 @@ async function loadSights(url) {
   let response = await fetch(url);
   let geojson = await response.json();
   //console.log(geojson);
-  L.geoJSON(geojson, {
-    onEachFeature: function (feature, layer) {
+  L.geoJSON(geojson,  {
+    pointToLayer: function(feature, latlng) {
+      return L.marker(latlng, {
+        icon: L.icon({
+          iconUrl: "icons/photo.png",
+          iconAnchor: [16, 37],
+          popupAnchor: [0, -37]
+        })
+      }); 
+    },
+    
+      onEachFeature: function (feature, layer) {
       console.log(feature);
       console.log(feature.properties.NAME);
       layer.bindPopup(`
@@ -84,8 +94,30 @@ async function loadLines(url) {
   let geojson = await response.json();
   //console.log(geojson);
   L.geoJSON(geojson, {
+      style: function(feature) {
+          let lineName = feature.properties.LINE_NAME;
+          let lineColor = "black";
+          if (lineName == "Red Line") {
+            lineColor = "#FF4136";
+          } else if (lineName == "Yellow Line") {
+            lineColor = "#FFDC00"; 
+          } else if (lineName == "Blue Line") {
+            lineColor = "#0074D9";
+          } else if (lineName == "Green Line") {
+            lineColor = "#2ECC40";
+          } else if (lineName == "Grey Line") {
+            lineColor = "#AAAAAA";
+          } else if (lineName == "Orange Line") {
+            lineColor = "#FF851B";
+          } else {
+            //villeicht kommen noch andere Linien dazu...
+          }
+        return {
+          color: lineColor,
+      };
+    },
     onEachFeature: function (feature, layer) {
-      console.log(feature);
+      console.log(feature);    
       console.log(feature.properties.LINE_NAME);
       layer.bindPopup(`
       <h4><i class="fa-solid fa-bus"></i> ${feature.properties.LINE_NAME}</h4> 
@@ -125,12 +157,11 @@ async function loadZones(url) {
   //console.log(geojson);
   L.geoJSON(geojson, {
     style: function(feature) {
-      return {color: "#F012BE",
-      weight: 1,
-      opacity: 0.4,
-      fillOpacity: 0.1
-      
-     }
+      return {
+        color: "#F012BE",
+        opacity: 0.4,
+        fillOpacity: 0.1,
+     };
     },
     onEachFeature: function (feature, layer) {
       console.log(feature);
