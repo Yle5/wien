@@ -15,11 +15,11 @@ let startLayer = L.tileLayer.provider("BasemapAT.grau");
 startLayer.addTo(map);
 
 let themaLayer = {
-  sights: L.featureGroup().addTo(map),
-  lines: L.featureGroup().addTo(map),
-  stops: L.featureGroup().addTo(map),
-  Fußgängerzonen: L.featureGroup().addTo(map),
-  hotels: L.featureGroup().addTo(map)
+  sights: L.featureGroup(),
+  lines: L.featureGroup(),
+  stops: L.featureGroup(),
+  zones: L.featureGroup().addTo(map),
+  hotels: L.featureGroup(),
 }
 
 // Hintergrundlayer
@@ -37,7 +37,7 @@ L.control
     "Sehenswürdigkeiten": themaLayer.sights,
     "Touristische Kraftfahrlinien Liniennetz Vienna Sightseeing Linie Wien ": themaLayer.lines,
     "Touristische Kraftfahrlinien Haltestellen Vienna Sightseeing Linie Standorte Wien": themaLayer.stops,
-    "Fußgängerzonen Wien": themaLayer.Fußgängerzonen,
+    "Fußgängerzonen Wien": themaLayer.zones,
     "Hotels und Unterkünfte Standort Wien": themaLayer.hotels,
   })
   .addTo(map);
@@ -110,7 +110,7 @@ async function loadStops(url) {
       console.log(feature.properties.STAT_NAME);
       layer.bindPopup(`
       <h4><i class="fa-solid fa-bus"></i> ${feature.properties.LINE_NAME}</h4>
-      <adress>${feature.properties.STAT_NAME}</adress>      
+      <p>${feature.properties.STAT_ID}${feature.properties.STAT_NAME}</p>      
       `)
     }
   }).addTo(themaLayer.stops);
@@ -129,15 +129,16 @@ async function loadZones(url) {
       console.log(feature.properties.NAME);
       layer.bindPopup(`
       <h4><adress>${feature.properties.ADRESSE}</adress></h4> 
-      <i class="fa-regular fa-clock"></i><time> ${feature.properties.ZEITRAUM}</time>
+      <i class="fa-regular fa-clock"></i><time>
+       ${feature.properties.ZEITRAUM}</time>
       <br>
       <i class="fa-solid fa-circle-info"></i><exception> ${feature.properties.AUSN_TEXT}</exception>   
       `)
     }
-  }).addTo(themaLayer.Fußgängerzonen);
+  }).addTo(themaLayer.loadZones);
 
 }
-loadFußgängerzonen("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:FUSSGEHERZONEOGD&srsName=EPSG:4326&outputFormat=json")
+loadZones("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:FUSSGEHERZONEOGD&srsName=EPSG:4326&outputFormat=json")
 
 async function loadHotels(url) {
   //console.log("Loading", url);
@@ -154,11 +155,11 @@ async function loadHotels(url) {
       <hr>
       <adress>Addr.: ${feature.properties.ADRESSE}</adress>
       <br>  
-      <phone>tel: <a href="${feature.properties.KONTAKT_TEL}">${feature.properties.KONTAKT_TEL}</a></phone>
+      <a href="tel:${feature.properties.KONTAKT_TEL}">${feature.properties.KONTAKT_TEL}</a>
       <br>
-      <email>mailto: <a href="${feature.properties.KONTAKT_EMAIL}">${feature.properties.KONTAKT_EMAIL}</a></email>
+      <a href="mailto:${feature.properties.KONTAKT_EMAIL}">${feature.properties.KONTAKT_EMAIL}</a>
       <br>
-      <website><a href="${feature.properties.WEBLINK1}">Homepage</a></website>
+      <a href="${feature.properties.WEBLINK1}" target="wien">Homepage</a>
     
 
       `)
