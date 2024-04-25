@@ -118,7 +118,7 @@ async function loadStops(url) {
 }
 loadStops("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:TOURISTIKHTSVSLOGD&srsName=EPSG:4326&outputFormat=json")
 
-async function loadFußgängerzonen(url) {
+async function loadZones(url) {
   //console.log("Loading", url);
   let response = await fetch(url);
   let geojson = await response.json();
@@ -154,9 +154,9 @@ async function loadHotels(url) {
       <hr>
       <adress>Addr.: ${feature.properties.ADRESSE}</adress>
       <br>  
-      <phone>Tel.: <a href="${feature.properties.KONTAKT_TEL}">${feature.properties.KONTAKT_TEL}</a></phone>
+      <phone>tel: <a href="${feature.properties.KONTAKT_TEL}">${feature.properties.KONTAKT_TEL}</a></phone>
       <br>
-      <email><a href="${feature.properties.KONTAKT_EMAIL}">${feature.properties.KONTAKT_EMAIL}</a></email>
+      <email>mailto: <a href="${feature.properties.KONTAKT_EMAIL}">${feature.properties.KONTAKT_EMAIL}</a></email>
       <br>
       <website><a href="${feature.properties.WEBLINK1}">Homepage</a></website>
     
