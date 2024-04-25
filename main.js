@@ -17,9 +17,11 @@ startLayer.addTo(map);
 let themaLayer = {
   sights: L.featureGroup(),
   lines: L.featureGroup(),
-  stops: L.featureGroup().addTo(map),
+  stops: L.featureGroup(),
   zones: L.featureGroup(),
-  hotels: L.featureGroup(),
+  hotels: L.markerClusterGroup({
+    disableClusteringAtZoom: 17
+  }).addTo(map),
 }
 
 // Hintergrundlayer
@@ -63,18 +65,18 @@ async function loadSights(url) {
   let response = await fetch(url);
   let geojson = await response.json();
   //console.log(geojson);
-  L.geoJSON(geojson,  {
-    pointToLayer: function(feature, latlng) {
+  L.geoJSON(geojson, {
+    pointToLayer: function (feature, latlng) {
       return L.marker(latlng, {
         icon: L.icon({
           iconUrl: "icons/photo.png",
           iconAnchor: [16, 37],
           popupAnchor: [0, -37]
         })
-      }); 
+      });
     },
-    
-      onEachFeature: function (feature, layer) {
+
+    onEachFeature: function (feature, layer) {
       console.log(feature);
       console.log(feature.properties.NAME);
       layer.bindPopup(`
@@ -94,30 +96,30 @@ async function loadLines(url) {
   let geojson = await response.json();
   //console.log(geojson);
   L.geoJSON(geojson, {
-      style: function(feature) {
-          let lineName = feature.properties.LINE_NAME;
-          let lineColor = "black";
-          if (lineName == "Red Line") {
-            lineColor = "#FF4136";
-          } else if (lineName == "Yellow Line") {
-            lineColor = "#FFDC00"; 
-          } else if (lineName == "Blue Line") {
-            lineColor = "#0074D9";
-          } else if (lineName == "Green Line") {
-            lineColor = "#2ECC40";
-          } else if (lineName == "Grey Line") {
-            lineColor = "#AAAAAA";
-          } else if (lineName == "Orange Line") {
-            lineColor = "#FF851B";
-          } else {
-            //villeicht kommen noch andere Linien dazu...
-          }
-        return {
-          color: lineColor,
+    style: function (feature) {
+      let lineName = feature.properties.LINE_NAME;
+      let lineColor = "black";
+      if (lineName == "Red Line") {
+        lineColor = "#FF4136";
+      } else if (lineName == "Yellow Line") {
+        lineColor = "#FFDC00";
+      } else if (lineName == "Blue Line") {
+        lineColor = "#0074D9";
+      } else if (lineName == "Green Line") {
+        lineColor = "#2ECC40";
+      } else if (lineName == "Grey Line") {
+        lineColor = "#AAAAAA";
+      } else if (lineName == "Orange Line") {
+        lineColor = "#FF851B";
+      } else {
+        //villeicht kommen noch andere Linien dazu...
+      }
+      return {
+        color: lineColor,
       };
     },
     onEachFeature: function (feature, layer) {
-      console.log(feature);    
+      console.log(feature);
       console.log(feature.properties.LINE_NAME);
       layer.bindPopup(`
       <h4><i class="fa-solid fa-bus"></i> ${feature.properties.LINE_NAME}</h4> 
@@ -143,10 +145,10 @@ async function loadStops(url) {
   let response = await fetch(url);
   let geojson = await response.json();
   //console.log(geojson);
-  L.geoJSON(geojson, {   
-    pointToLayer: function(feature, latlng) {
+  L.geoJSON(geojson, {
+    pointToLayer: function (feature, latlng) {
       return L.marker(latlng, {
-        icon: L.icon ({
+        icon: L.icon({
           iconUrl: `icons/bus_${feature.properties.LINE_ID}.png`,
           iconAnchor: [16, 37],
           popupAnchor: [0, -37]
@@ -172,12 +174,12 @@ async function loadZones(url) {
   let geojson = await response.json();
   //console.log(geojson);
   L.geoJSON(geojson, {
-    style: function(feature) {
+    style: function (feature) {
       return {
         color: "#F012BE",
         opacity: 0.4,
         fillOpacity: 0.1,
-     };
+      };
     },
     onEachFeature: function (feature, layer) {
       console.log(feature);
@@ -201,6 +203,31 @@ async function loadHotels(url) {
   let geojson = await response.json();
   //console.log(geojson);
   L.geoJSON(geojson, {
+    pointToLayer: function (feature, latlng) {
+      console.log(feature.properties.KATEGORIE_TXT);
+      let Kategorie = feature.properties.KATEGORIE_TXT;
+      let iconName;
+      if (Kategorie == "nicht kategorisiert") {
+        iconName = "hotel_0star"
+      } if (Kategorie == "1*") {
+        iconName = "hotel_1star"
+      } if (Kategorie == "2*") {
+        iconName = "hotel_2stars"
+      } if (Kategorie == "3*") {
+        iconName = "hotel_3stars"
+      } if (Kategorie == "4*") {
+        iconName = "hotel_4stars"
+      } if (Kategorie == "5*") {
+        iconName = "hotel_5stars"
+      }
+    return L.marker(latlng, {
+      icon: L.icon({
+        iconUrl: `icons/${iconName}.png`,
+        iconAnchor: [16, 37],
+        popupAnchor: [0, -37]
+      })
+    })
+  },
     onEachFeature: function (feature, layer) {
       console.log(feature);
       console.log(feature.properties.NAME);
